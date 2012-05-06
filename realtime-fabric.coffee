@@ -3,8 +3,13 @@ if Meteor.is_client
     greeting: -> "Welcome to realtime-fabric."
     events:
       'click input' : ->
-        # template data, if any, is available in 'this'
-        console.log("You pressed the button") if console?
+        canvas = new fabric.Canvas('c')
+        canvas.add new fabric.Rect
+          width: 50
+          height: 50
+          left: 50
+          top: 50
+          fill: 'rgb(255,0,0)'
 
 if Meteor.is_server
   Meteor.startup ->
