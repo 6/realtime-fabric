@@ -4,13 +4,39 @@
 </head>
 
 <body>
-  {{> hello}}
+  <div class="container">
+    <div class="row">
+      <div id="sidebar" class="span3">
+        {{> rooms}}
+      </div>
+      <div id="canvasthing" class="span9">
+        {{> canvas }}
+      </div>
+    </div>
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input class="btn" type="button" value="Add rectangle" />
+<template name="canvas">
+  <input class="btn" type="button" value="Add rectangle">
   <br>
-  <canvas id="c" width="600" height="350"></canvas>
+  <canvas id="c" width="800" height="350"></canvas> 
+</template>
+
+<template name="rooms">
+  <h3>Rooms</h3>
+  <div id="rooms">
+    {{#each rooms}}
+      {{> room}}
+    {{/each}}
+  </div>
+  <div id="create-room">
+    <input type="text" id="new-room" placeholder="New room">
+  </div>
+</template>
+
+<template name="room">
+  <div class="room {{selected}}">
+    <div class="room-name">
+      {{name}}
+    </div>
+  </div>
 </template>

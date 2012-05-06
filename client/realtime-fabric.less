@@ -4,5 +4,20 @@
 }
 
 body {
-  color: darken(@blue, 15%);
+  color: darken(@blue, 35%);
+}
+
+#sidebar {
+  background: #eee;
+  .room {
+    padding: 10px;
+    border-top: 1px solid @blue;
+    &.selected {
+      background: lighten(@blue, 10%);
+    }
+  }
+  #create-room {
+    border-top: 1px solid @blue;
+    padding: 10px 10px 0;
+  }
 }
