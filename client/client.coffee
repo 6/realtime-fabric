@@ -77,6 +77,7 @@ RoomsRouter = Backbone.Router.extend
     ":room_id": "main"
 
   main: (room_id) ->
+    window.canvas.clear()
     Session.set("room_id", room_id)
 
   set_room: (room_id) ->
