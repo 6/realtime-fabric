@@ -68,7 +68,7 @@ _.extend Template.canvas,
       canvas.add new fabric.Rect
         width: random_range(30, 70)
         height: random_range(30, 70)
-        left: random_range(30, 500)
+        left: random_range(30, 700)
         top: random_range(30, 250)
         fill: "rgb(#{random_range(70, 200)},#{random_range(70, 200)},255)"
 
