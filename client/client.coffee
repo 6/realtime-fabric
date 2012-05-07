@@ -1,6 +1,6 @@
 # Define Minimongo collections to match server/server.coffee
-Rooms = new Meteor.Collection("rooms");
-Shapes = new Meteor.Collection("shapes");
+Rooms = new Meteor.Collection("rooms")
+Objects = new Meteor.Collection("objects")
 
 # ID of current room
 Session.set('room_id', null)
@@ -15,7 +15,7 @@ Meteor.subscribe 'rooms', ->
 # Always be subscribed to the shapes for the selected room.
 Meteor.autosubscribe ->
   room_id = Session.get('room_id')
-  Meteor.subscribe('shapes', room_id) if room_id?
+  Meteor.subscribe('objects', room_id) if room_id?
 
 #### Helpers for in-place editing
 
