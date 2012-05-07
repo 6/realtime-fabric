@@ -11,12 +11,15 @@
       </div>
       <div id="canvasthing" class="span9">
         {{> canvas }}
+        {{> objects }}
       </div>
     </div>
 </body>
 
 <template name="canvas">
-  <input class="btn" type="button" value="Add rectangle">
+  <input class="btn add-shape" data-shape="rect" type="button" value="Add rectangle">
+  <input class="btn add-shape" data-shape="triangle" type="button" value="Add triangle">
+  <input class="btn add-shape" data-shape="circle" type="button" value="Add circle">
   <br>
   <canvas id="c" width="800" height="350"></canvas> 
 </template>
@@ -39,4 +42,12 @@
       {{name}}
     </div>
   </div>
+</template>
+
+<template name="objects">
+  {{#if any_room_selected}}
+    {{#each objects}}
+      {{object}}     
+    {{/each}}
+  {{/if}}
 </template>

@@ -62,15 +62,77 @@ Template.room.events =
   'mousedown': (evt) ->
     Router.set_room(@_id)
 
+#### Objects
+
+Template.objects.any_room_selected = ->
+  !Session.equals('room_id', null)
+  
+Template.objects.objects = ->
+  # Determine which objects to display in main pane,
+  # selected based on room_id
+  room_id = Session.get('room_id')
+  return {} unless room_id?
+  Objects.find({room_id: room_id}, {sort: {timestamp: 1}})
+  
+Template.objects.object = ->
+  window.canvas.forEachObject (obj) =>
+    # reactive magic doesn't work with canvas
+    window.canvas.remove(obj) if obj.mongoid is @_id
+  obj = switch @obj_type
+    when "rect" then new fabric.Rect
+      width: @width
+      height: @height
+    when "triangle" then new fabric.Triangle
+      width: @width
+      height: @height
+    when "circle" then new fabric.Circle
+      radius: @width
+      scaleX: @scaleX
+      scaleY: @scaleY
+  obj.fill = @fill
+  obj.setAngle(@angle)
+  obj.left = @left
+  obj.top = @top
+  obj.mongoid = @_id
+  obj.obj_type = @obj_type
+  window.canvas.add obj
+  ""
+
+add_fabric_thing = (obj_type) ->
+  data =
+    room_id: Session.get('room_id')
+    obj_type: obj_type
+    timestamp: (new Date()).getTime()
+    left: random_range(30, 700)
+    top: random_range(30, 250)
+    width: random_range(30, 70)
+    height: random_range(30, 70)
+    angle: 0
+  if obj_type in ["rect", "triangle", "circle"]
+    data.fill = "rgb(#{random_range(70, 200)},#{random_range(70, 200)},#{random_range(70, 200)})"
+    if obj_type is "circle"
+      data.scaleX = 0.5
+      data.scaleY = 0.5
+  Objects.insert(data)
+
+on_object_modified = (memo) ->
+  target = memo.memo.target
+  data =
+    angle: target.getAngle()
+    top: target.top
+    left: target.left
+  if target.obj_type is "circle"
+    data.scaleX = target.scaleX
+    data.scaleY = target.scaleY
+  else
+    data.width = target.getWidth()
+    data.height = target.getHeight()
+  Objects.update target.mongoid, $set: data
+
 _.extend Template.canvas,
   events:
-    'click input' : ->
-      canvas.add new fabric.Rect
-        width: random_range(30, 70)
-        height: random_range(30, 70)
-        left: random_range(30, 700)
-        top: random_range(30, 250)
-        fill: "rgb(#{random_range(70, 200)},#{random_range(70, 200)},255)"
+    'click .add-shape': (e) ->
+      add_fabric_thing($(e.target).data("shape"))
 
 RoomsRouter = Backbone.Router.extend
   routes:
@@ -87,4 +149,5 @@ Router = new RoomsRouter
 
 Meteor.startup ->
   window.canvas = new fabric.Canvas('c')
+  window.canvas.observe("object:modified", on_object_modified)
   Backbone.history.start(pushState: true)
